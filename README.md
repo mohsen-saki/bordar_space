@@ -1,1 +1,0 @@
-# bordar_space
