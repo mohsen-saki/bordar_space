@@ -4,7 +4,7 @@ project:
 website:
   title: "Bordar Space"
   site-url: https://mohsen-saki.github.io/bordar_space/
-  favicon: logo.png
+  favicon: images/logo.png
   navbar:
     right:
       - about.qmd

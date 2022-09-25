@@ -6,7 +6,9 @@ date: '12/03/2020'
 description: "This analysis alongside some dashboards is a historical overview of Australia’s Resources & Energy Sector. Tied to the country's politics & geopolitics, this is the story of how the sector has grown over three decades compared to other major sectors such as Construction, Manufacturing, Agriculture, and Services."
 categories: [analysis, dashboard, powerbi, tableau, australia, economy, energy, resources, insight]
 image: images/sm_preview.png
-comments: false
+comments:
+  utterances:
+    repo: mohsen-saki/bordar_space
 ---
 
 ![](images/cover.png)

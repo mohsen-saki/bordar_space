@@ -9,7 +9,7 @@ listing:
 page-layout: full
 title-block-banner: false
 ---
-![](cover.png)
+![](images/cover.png)
 
 I write here about my interactions with technology (eg. CS, Data, AI, etc) such as 
 challenges, lessons learned, and my understanding of those concepts. Having said that, 
