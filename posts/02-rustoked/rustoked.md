@@ -2,13 +2,14 @@
 title: "R.U.Stoked"
 toc: true
 layout: post
-date: "17/03/2021"
+date: '3/17/2021'
 description: "An experimental NLP Project or safe to say sentiment analysis. I will walk you through an end-to-end data pipeline. From data collection through model deployment. Codes are also available on github for further exploration."
 categories: [NLP, sentiment analysis, machine lerarning, sklearn, data processing, pandas, bokeh, random forest, feature engineering]
 image: images/sm_preview.jpeg
 comments:
   utterances:
     repo: mohsen-saki/bordar_space
+title-block-categories: false
 ---
 
 
