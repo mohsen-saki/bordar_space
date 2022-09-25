@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2022-05-03">
+<meta name="description" content="An experimental NLP Project or safe to say sentiment analysis. I will walk you through an end-to-end data pipeline. From data collection through model deployment. Codes are also available on github for further exploration.">
+
+<title>Bordar Space - R.U.Stoked</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/logo.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Bordar Space</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">About</a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-about-is-this-project" id="toc-what-about-is-this-project" class="nav-link active" data-scroll-target="#what-about-is-this-project">What about is this project?</a></li>
+  <li><a href="#where-does-data-come-from" id="toc-where-does-data-come-from" class="nav-link" data-scroll-target="#where-does-data-come-from">Where does data come from?</a></li>
+  <li><a href="#what-are-challenges" id="toc-what-are-challenges" class="nav-link" data-scroll-target="#what-are-challenges">What are challenges?</a></li>
+  <li><a href="#first-try-and-failure" id="toc-first-try-and-failure" class="nav-link" data-scroll-target="#first-try-and-failure">First try and failure</a></li>
+  <li><a href="#toolings-and-technologies" id="toc-toolings-and-technologies" class="nav-link" data-scroll-target="#toolings-and-technologies">Toolings and Technologies</a></li>
+  <li><a href="#how-did-it-go" id="toc-how-did-it-go" class="nav-link" data-scroll-target="#how-did-it-go">How did it go?</a></li>
+  <li><a href="#the-application" id="toc-the-application" class="nav-link" data-scroll-target="#the-application">The Application</a></li>
+  <li><a href="#deployment" id="toc-deployment" class="nav-link" data-scroll-target="#deployment">Deployment</a></li>
+  <li><a href="#whats-next" id="toc-whats-next" class="nav-link" data-scroll-target="#whats-next">What’s next?</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">R.U.Stoked</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">NLP</div>
+    <div class="quarto-category">sentiment analysis</div>
+    <div class="quarto-category">machine lerarning</div>
+    <div class="quarto-category">sklearn</div>
+    <div class="quarto-category">data processing</div>
+    <div class="quarto-category">pandas</div>
+    <div class="quarto-category">bokeh</div>
+    <div class="quarto-category">random forest</div>
+    <div class="quarto-category">feature engineering</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    An experimental NLP Project or safe to say sentiment analysis. I will walk you through an end-to-end data pipeline. From data collection through model deployment. Codes are also available on github for further exploration.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 3, 2022</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<p><img src="images/cover.jpg" class="img-fluid"></p>
+<p><br></p>
+<section id="what-about-is-this-project" class="level1">
+<h1>What about is this project?</h1>
+<p>R.U.Stoked is a <strong>Natural Language Processing</strong> (<em>Sentiment Analysis</em> type), not a binary one though. Here I focused on detecting a third group of sentiment which I call here after <code>“Disengaged”</code>. A range of opinions which are neither <code>“Stoked”</code> nor <code>“Dissatisfied”</code>. I think detecting this group of so to speak “users/customers” can create business values in problem cases such as <strong>Churn</strong> or targeting <strong>prospect customers</strong>. Actually this idea is also kind of supported by the data. Almost exactly half of reviews rated <code>3</code> out of <code>5</code> recommended their experience to others and the other half suggested not to.</p>
+<p>View the project here on <a href="https://github.com/mohsen-saki/RUStoked">Github</a>.</p>
+</section>
+<section id="where-does-data-come-from" class="level1">
+<h1>Where does data come from?</h1>
+<p>The <a href="https://github.com/mohsen-saki/RUStoked/tree/master/data">data</a> has been collected (/scraped) from <a href="https://www.seek.com.au/">SEEK</a> website. It comprises almost <code>13k</code> rows of data by which employees have expressed their feelings and opinions about their employers. I have just collected the data for a dozen of companies which have relatively had higher number of reviews. And They mostly belong to two fields of FMCG retailers and Finance/Technology industries.</p>
+</section>
+<section id="what-are-challenges" class="level1">
+<h1>What are challenges?</h1>
+<ul>
+<li>Detecting a <em>neutral</em> class of sentiment in between <code>positive</code> and <code>negative</code> ones has been a bit of challenge because exploring those reviews shows that the choice of words tends to be almost similar to either positive or negative reviews.</li>
+<li>Many of the reviews are written by <em>not-native English speakers</em> as they vary a lot in terms of word choices, sentence structures, comprehension, etc.</li>
+<li>The SEEK template for registering reviews is asking for <code>pros</code> and <code>cons</code>. So, it has resulted in more of a list-like outcome rather than comprehensive opinions. For example in response to cons many may say “management” which clearly lacks the sentiment compared to something like “bad or poor management”.</li>
+<li>Another feature of SEEK’s reviews is that the overall rating is not calculated as average of employees’ ratings on some other subjects but it is acquired independently. This raised a bit of inconsistency between users’ overall opinion of their client compared to their opinion on different aspects of their work paces.</li>
+</ul>
+</section>
+<section id="first-try-and-failure" class="level1">
+<h1>First try and failure</h1>
+<p>There is a folder named “<a href="https://github.com/mohsen-saki/RUStoked/tree/master/withdrawn">withdrawn</a>” in the repository which contains a few notebooks as my first approach to this project which I consider as a <em>failure</em> not particularly for the outcomes but more because of my strategy. I was sort of rushing to wrap it up which was not really working out and this is why: * I did not collect enough data in terms of both the amount of data and the meta-data which help to explore and explain data beter. * I did not tackle the problem according to the best practices. I created a pipeline of different models with various features and used the <code>grid search</code> technique to see which one results in the best accuracy score. I did not put much time into data exploration and feature engineering. As a result, It was more of a black box with no insight of what is going on under the hood of model performance.<br>
+* I was not writing good codes. It was all in the notebooks (not reusable and well structured)</p>
+<p>However, I came across this excellent book <a href="https://www.oreilly.com/library/view/building-machine-learning/9781492045106/">“Building Machine Learning Powered Applications“</a> written by <a href="https://www.linkedin.com/in/ameisen/">Emmanuel Ameisen</a>. Reading this book is actually the reason to reconsider my approach and start this project over.</p>
+</section>
+<section id="toolings-and-technologies" class="level1">
+<h1>Toolings and Technologies</h1>
+<ul>
+<li><code>pandas</code> to manipulate and explore the data<br>
+</li>
+<li><code>matplotlib</code> and <code>bokeh</code> to visualise and explore the data</li>
+</ul>
+<p><img src="images/explore1.png" class="img-fluid"></p>
+<ul>
+<li><code>TfifVectorizer</code> and in some cases <code>Spacy</code> to get the word vectors.<br>
+</li>
+<li>Scikit-Learn <code>RandomForestClassifier</code> and <code>Naive Bayes</code> as model/algorithm</li>
+<li><code>streamlit</code> to build the application</li>
+<li><code>Docker</code> and <code>Github Actions</code> for CI/CD</li>
+<li><code>Heroku</code> and <code>AWS</code> to deploy on</li>
+</ul>
+</section>
+<section id="how-did-it-go" class="level1">
+<h1>How did it go?</h1>
+<hr>
+<p>First model trained on just the text data has performed pretty well on predicting positive and negative classes but poorly on the “Disengaged” labels.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/score1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Image</figcaption><p></p>
+</figure>
+</div>
+<p>To tweak the model performance, I extracted some features from the data and plugged them into the vectors. Those features were selected to help the model detecting the sentiment better and distinguishing different labels easier such as:</p>
+<ul>
+<li>Words <code>great</code> and <code>good</code> appear frequently in positive opinions</li>
+<li>Words <code>poor</code>, <code>bad</code>, <code>not</code>, etc. appear frequently in negative opinions</li>
+<li>The <em>count</em> of above words appears to be an indication of sentiment in each piece of review.</li>
+<li>The word <code>but</code> seems to have a higher frequency of occurring within “Disengaged” labels as it serves for changing the language tone from positive to negative or vice versa.</li>
+</ul>
+<p>Plugging above candidate features in the word vectors and visualization shows some improvement in separating data clusters each containing the majority of one of the labels but for the “Disengaged” label it still does not show much improvement:</p>
+<p><img src="images/explore2.png" class="img-fluid"></p>
+<p>And the outcome scores agree as well:</p>
+<p><img src="images/score2.png" class="img-fluid"></p>
+<p>Well, I would say <strong>if features are too obvious, probably the model has already picked them</strong>. Using <code>Naive Bayes</code> algorithm as recommended by Scikit-Learn (<a href="https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html">Choosing the right estimator</a>) did not make a noticeable difference as expected (<em>Normally a data problem results should not change considerably just by changing algorithm, if so, probably something is done wrong</em>).</p>
+<p>However, using just features without the word vectors shows some improvement albeit at cost of model performance decrease on two other labels.</p>
+<p><img src="images/score3.png" class="img-fluid"></p>
+<p>Working more on generating and extracting features seems like a promising approach to take here.</p>
+</section>
+<section id="the-application" class="level1">
+<h1>The Application</h1>
+<p>I have recently been hearing a lot about <a href="https://www.streamlit.io/">Streamlit</a> and I wanted to try something new. Although it may not be as sophisticated as some backend frameworks such as <a href="https://flask.palletsprojects.com/en/1.1.x/">Flask</a> and <a href="https://www.djangoproject.com/">Django</a>, I should say that for prototyping and a simple single-page webapp, <a href="https://www.streamlit.io/">Streamlit</a> was super easy, extremely quick, and very cool.</p>
+<p><a href="https://rustoked.herokuapp.com/">RUStoked is live here!</a></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/app.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Image</figcaption><p></p>
+</figure>
+</div>
+</section>
+<section id="deployment" class="level1">
+<h1>Deployment</h1>
+<p>I went with a <a href="https://www.docker.com/">docker</a> image as it is quite standard and straight forward. Deployment has been automated through <a href="https://github.com/features/actions">GitHub Action</a> to trigger some workflows on <code>push</code> and deploy to <a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_instances.html">AWS ECS Instance</a> and <a href="https://www.heroku.com/free">HEROKU</a>, not at the same time though (Heroku server port is not to select and is generated as an environment variable which make some adjusments necessary to Dockerfile).</p>
+<p>Obviously AWS required a lot more work around to get it orchestrating right and it is much stronger for providing this level of access to tweak the environment, however I love HEROKU for being simple and free :) as far as it is not consuming resources like a commercial webapp.</p>
+<p>Anyway, it is live <a href="https://rustoked.herokuapp.com/">here</a> on <strong>heroku</strong> <del>and <a href="">here</a> on <strong>AWS</strong></del>.</p>
+</section>
+<section id="whats-next" class="level1">
+<h1>What’s next?</h1>
+<ul>
+<li>Writing some unit tests and getting them to run through github actions.</li>
+<li>More on model development focusing on extracting and generating features</li>
+<li>Trying neural net for same problem</li>
+</ul>
+<p>Thanks to open source and free world. <img src="images/foot.png" class="img-fluid" alt="Image"></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<script src="https://utteranc.es/client.js" repo="mohsen-saki/bordar_space" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

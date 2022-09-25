@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/02-rustoked/rustoked.html",
       "/posts/01-aus-economy/aus-economy.html"
     ]
   }
